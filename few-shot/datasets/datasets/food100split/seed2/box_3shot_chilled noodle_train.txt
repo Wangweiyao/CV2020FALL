@@ -1,0 +1,3 @@
+/home/weiyao/data/FOOD100_WW/Images/7680.jpg
+/home/weiyao/data/FOOD100_WW/Images/7682.jpg
+/home/weiyao/data/FOOD100_WW/Images/7699.jpg
