@@ -1,0 +1,20 @@
+_BASE_: "../Base-RCNN-FPN.yaml"
+MODEL:
+  WEIGHTS: "https://dl.fbaipublicfiles.com/detectron2/COCO-Detection/faster_rcnn_R_50_FPN_3x/137849458/model_final_280758.pkl"
+  MASK_ON: False
+  RESNETS:
+    DEPTH: 50
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 512
+    NUM_CLASSES: 53
+DATASETS:
+  TRAIN: ('food53_base_train',)
+  TEST: ('food53_base_val',)
+SOLVER:
+  IMS_PER_BATCH: 2
+  BASE_LR: 0.001
+  STEPS: (60000, 80000)
+  MAX_ITER: 100000
+TEST:
+  EVAL_PERIOD: 5000
+OUTPUT_DIR: "checkpoints/food/faster_rcnn/faster_rcnn_R_50_FPN_base_2x"
