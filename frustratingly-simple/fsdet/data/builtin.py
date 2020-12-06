@@ -24,6 +24,92 @@ from .builtin_meta import _get_builtin_metadata
 from .meta_coco import register_meta_coco
 from .meta_lvis import register_meta_lvis
 from .meta_pascal_voc import register_meta_pascal_voc
+from detectron2.data.datasets import register_coco_instances
+# ==== Predefined datasets and splits for FOOD 100 ==========
+
+_PREDEFINED_SPLITS_FOOD = {}
+_PREDEFINED_SPLITS_FOOD["food"] = {
+    "food53_all_train": (
+        "food53/images",
+        "food53/annotations/all_train.json",
+    ),
+    "food53_all_val": (
+        "food53/images",
+        "food53/annotations/all_val.json",
+    ),
+    "food53_all_test": (
+        "food53/images",
+        "food53/annotations/all_test.json",
+    ),
+    "food53_base_train": (
+        "food53/images",
+        "food53/annotations/base_train.json",
+    ),
+    "food53_base_train_1_shot": (
+        "food53/images",
+        "food53/annotations/base_train_1_shot.json",
+    ),
+    "food53_base_train_3_shot": (
+        "food53/images",
+        "food53/annotations/base_train_3_shot.json",
+    ),
+    "food53_base_train_5_shot": (
+        "food53/images",
+        "food53/annotations/base_train_5_shot.json",
+    ),
+    "food53_base_train_10_shot": (
+        "food53/images",
+        "food53/annotations/base_train_10_shot.json",
+    ),
+    "food53_base_val": (
+        "food53/images",
+        "food53/annotations/base_val.json",
+    ),
+    "food53_base_test": (
+        "food53/images",
+        "food53/annotations/base_test.json",
+    ),
+    "food53_novel_train": (
+        "food53/images",
+        "food53/annotations/novel_train.json",
+    ),
+    "food53_novel_train_1_shot": (
+        "food53/images",
+        "food53/annotations/novel_train_1_shot.json",
+    ),
+    "food53_novel_train_3_shot": (
+        "food53/images",
+        "food53/annotations/novel_train_3_shot.json",
+    ),
+    "food53_novel_train_5_shot": (
+        "food53/images",
+        "food53/annotations/novel_train_5_shot.json",
+    ),
+    "food53_novel_train_10_shot": (
+        "food53/images",
+        "food53/annotations/novel_train_10_shot.json",
+    ),
+    "food53_novel_val": (
+        "food53/images",
+        "food53/annotations/novel_val.json",
+    ),
+    "food53_novel_test": (
+        "food53/images",
+        "food53/annotations/novel_test.json",
+    ),
+}
+
+def register_all_food(root="datasets"):
+    for dataset_name, splits_per_dataset in _PREDEFINED_SPLITS_FOOD.items():
+        for key, (image_root, json_file) in splits_per_dataset.items():
+        # Assume pre-defined datasets live in `./datasets`.
+            register_coco_instances(
+                key,
+                {},
+                os.path.join(root, json_file),
+                os.path.join(root, image_root),
+            )
+
 
 # ==== Predefined datasets and splits for COCO ==========
 
@@ -271,3 +357,4 @@ def register_all_pascal_voc(root="datasets"):
 register_all_coco()
 register_all_lvis()
 register_all_pascal_voc()
+register_all_food()
