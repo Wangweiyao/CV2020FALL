@@ -11,4 +11,4 @@ bash run_finetuning.sh
 Cosine similairty distance with novel classes:
 bash run_extract_features.sh
 ## Pose Estimation
-Pose estimation with input image with name img_name: pose_estimation(img_name)
+Pose estimation for input image with name "img_name": pose_estimation(img_name)
