@@ -52,41 +52,6 @@ Inference:
 $ pip install -r requirements.txt
 ```
 
-### few-shot
-
-Requirements:
-
-
-Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) dependencies installed, including `torch>=1.6`. To install run:
-```bash
-$ pip install -r requirements.txt
-```
-Training:
-<<<<<<< HEAD
-
-cd to the folder yolov5
-```bash
-$ pip install -r requirements.txt
-```
-
-
-=======
-```bash
-$ python train.py --img 640 --batch 32 --epochs 300 --data food53_base.yaml --weights yolov5s.pt --device 0
-```
-Fine-tuning:
-```bash
-$ python train.py --img 640 --batch 32 --epochs 300 --data food53_1_shot.yaml --weights weights/best.pt --device 0 --hyp hyp.finetune.yaml --freeze-backbone
-                                                           food53_3_shot.yaml  
-                                                           food53_5_shot.yaml
-                                                           food53_10_shot.yaml
-```
->>>>>>> 1a549280ebbdaf12092bba0072bc582b9fd42074
-Inference:
-
-```bash
-$ python detect.py --source data/images --weights weights/best.pt --conf 0.25
-```
 
 ### Meta-Baseline for Few-Shot Image Classification 
 ```bash
