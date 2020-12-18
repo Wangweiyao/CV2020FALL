@@ -3,7 +3,7 @@
 Please follow instructions step 1-7 in data preprocessing folder
 ## Faster RCNN
 ```
-$ cd fasterrcnn
+$ cd faster-rcnn
 ```
 Training with base classes: 
 ```
