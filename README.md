@@ -13,14 +13,33 @@ bash run_extract_features.sh
 
 
 ## YOLO-V5
-# Requirements
+
+```bash
+$ cd yolov5
+```
+Requirements:
 
 Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) dependencies installed, including `torch>=1.6`. To install run:
 ```bash
 $ pip install -r requirements.txt
 ```
+Training:
 
+```bash
+$ python train.py --img 640 --batch 32 --epochs 300 --data food53_base.yaml --weights yolov5s.pt --device 0
+```
 
+Fine-tuning:
+
+```bash
+$ python train.py --img 640 --batch 32 --epochs 300 --data food53_1_shot.yaml --weights weights/best.pt --device 0 --hyp hyp.finetune.yaml --freeze-backbone
+                                                           food53_3_shot.yaml  
+                                                           food53_5_shot.yaml
+                                                           food53_10_shot.yaml
+
+```
+
+Inference:
 
 ```bash
 $ pip install -r requirements.txt
