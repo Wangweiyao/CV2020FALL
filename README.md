@@ -52,7 +52,7 @@ Inference:
 $ pip install -r requirements.txt
 ```
 
-## few-shot
+### few-shot
 
 Requirements:
 
@@ -88,7 +88,7 @@ Inference:
 $ python detect.py --source data/images --weights weights/best.pt --conf 0.25
 ```
 
-## Meta-Baseline for Few-Shot Image Classification 
+### Meta-Baseline for Few-Shot Image Classification 
 ```bash
 $ cd few-shot-meta-baseline
 ```
