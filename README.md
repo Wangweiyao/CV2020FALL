@@ -10,6 +10,23 @@ bash run_finetuning.sh
 
 Cosine similairty distance with novel classes:
 bash run_extract_features.sh
+
+
+## YOLO-V5
+# Requirements
+
+Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) dependencies installed, including `torch>=1.6`. To install run:
+```bash
+$ pip install -r requirements.txt
+```
+
+
+
+```bash
+$ pip install -r requirements.txt
+```
+
+
 ## Pose Estimation
 Pose estimation for input image with name "img_name": pose_estimation(img_name)
 
