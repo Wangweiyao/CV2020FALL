@@ -2,6 +2,9 @@
 ## Data preprocessing:
 Please follow instructions step 1-7 in data preprocessing folder
 ## Faster RCNN
+```
+$ cd fasterrcnn
+```
 Training with base classes: 
 ```
 $ bash run_base_training.sh
