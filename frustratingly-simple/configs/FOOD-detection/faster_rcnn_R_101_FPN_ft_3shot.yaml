@@ -1,12 +1,12 @@
 _BASE_: "../Base-RCNN-FPN.yaml"
 MODEL:
-  WEIGHTS: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_base_no_aug/model_final.pth"
+  WEIGHTS: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_base/model_final.pth"
   MASK_ON: False
   RESNETS:
     DEPTH: 101
   ROI_HEADS:
     NUM_CLASSES: 53
-    OUTPUT_LAYER: "CosineSimOutputLayers"
+    OUTPUT_LAYER: "FastRCNNOutputLayers"
     FREEZE_FEAT: True
   BACKBONE:
     FREEZE: True
@@ -17,7 +17,7 @@ INPUT:
   MIN_SIZE_TEST: 800
 DATASETS:
   TRAIN: ('food53_base_train_3_shot','food53_novel_train_3_shot',)
-  TEST: ('food53_base_val','food53_novel_val_3')
+  TEST: ('food53_base_val','food53_novel_val')
 DATALOADER:
   SAMPLER_TRAIN: "RepeatFactorTrainingSampler"
   REPEAT_THRESHOLD: 0.95
@@ -26,7 +26,7 @@ SOLVER:
   BASE_LR: 0.001
   STEPS: (30000,)
   MAX_ITER: 40000
-  CHECKPOINT_PERIOD: 500
+  CHECKPOINT_PERIOD: 5000
   WARMUP_ITERS: 0
 TEST:
   EVAL_PERIOD: 500

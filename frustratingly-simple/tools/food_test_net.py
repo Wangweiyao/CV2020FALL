@@ -134,21 +134,20 @@ def setup(args):
 
 def main(args):
     cfg = setup(args)
+    cfg.defrost()
+    #cfg.DATASETS.TEST = ('food53_al_base_test','food53_al_novel_test')
+    cfg.DATASETS.TEST = ('food53_base_test','food53_novel_test')
     if args.eval_only:
         model = Trainer.build_model(cfg)
-        if args.eval_iter != -1:
-            # load checkpoint at specified iteration
-            ckpt_file = os.path.join(
-                cfg.OUTPUT_DIR, "model_{:07d}.pth".format(args.eval_iter - 1)
-            )
-            resume = False
-        else:
+
             # load checkpoint at last iteration
-            ckpt_file = cfg.MODEL.WEIGHTS
-            resume = True
-        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
-            ckpt_file, resume=resume
-        )
+        ckpt_file = args.model_path 
+        resume = True
+        
+        #DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
+        #    ckpt_file, resume=resume
+        #)
+        DetectionCheckpointer(model).load(ckpt_file) 
         res = Trainer.test(cfg, model)
         if comm.is_main_process():
             verify_results(cfg, res)
@@ -157,7 +156,7 @@ def main(args):
                 os.path.join(cfg.OUTPUT_DIR, "inference"), exist_ok=True
             )
             with open(
-                os.path.join(cfg.OUTPUT_DIR, "inference", "res_final.json"),
+                os.path.join(cfg.OUTPUT_DIR, "inference", f"res_{args.test_name}.json"),
                 "w",
             ) as fp:
                 json.dump(res, fp)

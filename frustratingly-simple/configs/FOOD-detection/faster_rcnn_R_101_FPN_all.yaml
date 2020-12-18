@@ -8,8 +8,8 @@ MODEL:
     BATCH_SIZE_PER_IMAGE: 512
     NUM_CLASSES: 53
 DATASETS:
-  TRAIN: ('food53_all_train',)
-  TEST: ('food53_all_val',)
+  TRAIN: ('food53_base_train','food53_novel_train')
+  TEST: ('food53_base_test','food53_novel_test')
 SOLVER:
   IMS_PER_BATCH: 2
   BASE_LR: 0.001
@@ -17,7 +17,7 @@ SOLVER:
   MAX_ITER: 100000
 DATALOADER:
   SAMPLER_TRAIN: "RepeatFactorTrainingSampler"
-  REPEAT_THRESHOLD: 0.001
+  REPEAT_THRESHOLD: 0.95
 TEST:
   EVAL_PERIOD: 5000
 OUTPUT_DIR: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_all"

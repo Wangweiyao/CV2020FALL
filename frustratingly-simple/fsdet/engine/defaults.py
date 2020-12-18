@@ -69,6 +69,18 @@ def default_argument_parser():
         help="path to config file",
     )
     parser.add_argument(
+        "--model-path",
+        default="",
+        metavar="MODEL",
+        help="path to model file",
+    )
+    parser.add_argument(
+        "--test-name",
+        default="",
+        metavar="NAME",
+        help="name to save",
+    )
+    parser.add_argument(
         "--resume",
         action="store_true",
         help="whether to attempt to resume from the checkpoint directory",

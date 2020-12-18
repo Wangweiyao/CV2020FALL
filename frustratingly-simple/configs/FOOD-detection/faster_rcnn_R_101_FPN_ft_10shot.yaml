@@ -1,12 +1,12 @@
 _BASE_: "../Base-RCNN-FPN.yaml"
 MODEL:
-  WEIGHTS: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_base_no_aug/model_final.pth"
+  WEIGHTS: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_base/model_final.pth"
   MASK_ON: False
   RESNETS:
     DEPTH: 101
   ROI_HEADS:
     NUM_CLASSES: 53
-    OUTPUT_LAYER: "CosineSimOutputLayers"
+    OUTPUT_LAYER: "FastRCNNOutputLayers"
     FREEZE_FEAT: True
   BACKBONE:
     FREEZE: True
@@ -26,7 +26,7 @@ SOLVER:
   BASE_LR: 0.0001
   STEPS: (30000,)
   MAX_ITER: 40000
-  CHECKPOINT_PERIOD: 500
+  CHECKPOINT_PERIOD: 5000
   WARMUP_ITERS: 0
 TEST:
   EVAL_PERIOD: 500

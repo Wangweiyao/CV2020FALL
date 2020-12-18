@@ -23,7 +23,7 @@ from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.data import MetadataCatalog
 from detectron2.engine import launch
 from fsdet.evaluation import (
-    COCOEvaluator, DatasetEvaluators, LVISEvaluator, PascalVOCDetectionEvaluator, verify_results)
+    FOODEvaluator, COCOEvaluator, DatasetEvaluators, LVISEvaluator, PascalVOCDetectionEvaluator, verify_results)
 import os
 import random
 import cv2
@@ -84,13 +84,13 @@ class Trainer(DefaultTrainer):
     are working on a new research project. In that case you can use the cleaner
     "SimpleTrainer", or write your own training loop.
     """
-    #@classmethod
-    #def build_test_loader(cls, cfg, dataset_name):
-    #    return build_detection_test_loader(cfg, dataset_name, mapper=DatasetMapper(cfg, False))
+    @classmethod
+    def build_test_loader(cls, cfg, dataset_name):
+        return build_detection_test_loader(cfg, dataset_name, mapper=DatasetMapper(cfg, False))
 
-    #@classmethod
-    #def build_train_loader(cls, cfg):
-    #    return build_detection_train_loader(cfg, mapper=DatasetMapper(cfg, True, augmentations=augmentations))
+    @classmethod
+    def build_train_loader(cls, cfg):
+        return build_detection_train_loader(cfg, mapper=DatasetMapper(cfg, True, augmentations=augmentations))
     #def build_train_loader(cls, cfg):
     #    return build_detection_train_loader(cfg, mapper=mapper)
 
@@ -104,7 +104,7 @@ class Trainer(DefaultTrainer):
         """
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
-        return COCOEvaluator(dataset_name, cfg, True, output_folder)
+        return FOODEvaluator(dataset_name, cfg, True, output_folder)
 
         '''
         evaluator_list = []

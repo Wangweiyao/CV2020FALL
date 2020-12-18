@@ -37,7 +37,23 @@ _PREDEFINED_SPLITS_FOOD["food"] = {
         "food53/images",
         "food53/annotations/all_val.json",
     ),
+    "food53_al_base_val": (
+        "food53/images",
+        "food53/annotations/all_val.json",
+    ),
+    "food53_al_novel_val": (
+        "food53/images",
+        "food53/annotations/all_val.json",
+    ),
     "food53_all_test": (
+        "food53/images",
+        "food53/annotations/all_test.json",
+    ),
+    "food53_al_base_test": (
+        "food53/images",
+        "food53/annotations/all_test.json",
+    ),
+    "food53_al_novel_test": (
         "food53/images",
         "food53/annotations/all_test.json",
     ),

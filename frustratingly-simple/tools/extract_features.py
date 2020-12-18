@@ -32,7 +32,16 @@ from detectron2.engine import hooks, launch
 from fsdet.evaluation import (
     FOODEvaluator, COCOEvaluator, DatasetEvaluators, LVISEvaluator, PascalVOCDetectionEvaluator, verify_results)
 
-
+_base_classes = [
+    1,2,3,4,6,8,9,12,14,15,
+    16,17,18,19,22,24,25,26,28,29,
+    32,38,51
+]
+_novel_classes = [ 
+    5,7,10,11,13,20,21,23,27,30,
+    31,33,34,35,36,37,39,40,41,42,
+    43,44,45,46,47,48,49,50,52,53
+]
 class Trainer(DefaultTrainer):
     """
     We use the "DefaultTrainer" which contains a number pre-defined logic for
@@ -134,69 +143,88 @@ def setup(args):
 
 def main(args):
     cfg = setup(args)
-    if args.eval_only:
-        model = Trainer.build_model(cfg)
-        if args.eval_iter != -1:
-            # load checkpoint at specified iteration
-            ckpt_file = os.path.join(
-                cfg.OUTPUT_DIR, "model_{:07d}.pth".format(args.eval_iter - 1)
+    device = torch.device('cuda')  
+    model = Trainer.build_model(cfg)
+
+    check_pointer = DetectionCheckpointer(
+                model, save_dir=cfg.OUTPUT_DIR
             )
-            resume = False
-        else:
-            # load checkpoint at last iteration
-            ckpt_file = cfg.MODEL.WEIGHTS
-            resume = True
-        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
-            ckpt_file, resume=resume
-        )
-        res = Trainer.test(cfg, model)
-        if comm.is_main_process():
-            verify_results(cfg, res)
-            # save evaluation results in json
-            os.makedirs(
-                os.path.join(cfg.OUTPUT_DIR, "inference"), exist_ok=True
-            )
-            with open(
-                os.path.join(cfg.OUTPUT_DIR, "inference", "res_final.json"),
-                "w",
-            ) as fp:
-                json.dump(res, fp)
-        return res
-    elif args.eval_all:
-        tester = Tester(cfg)
-        all_ckpts = sorted(tester.check_pointer.get_all_checkpoint_files())
-        for i, ckpt in enumerate(all_ckpts):
-            ckpt_iter = ckpt.split("model_")[-1].split(".pth")[0]
-            if ckpt_iter.isnumeric() and int(ckpt_iter) + 1 < args.start_iter:
-                # skip evaluation of checkpoints before start iteration
-                continue
-            if args.end_iter != -1:
-                if (
-                    not ckpt_iter.isnumeric()
-                    or int(ckpt_iter) + 1 > args.end_iter
-                ):
-                    # skip evaluation of checkpoints after end iteration
-                    break
-            tester.test(ckpt)
-        return best_res
-    elif args.eval_during_train:
-        tester = Tester(cfg)
-        saved_checkpoint = None
-        while True:
-            if tester.check_pointer.has_checkpoint():
-                current_ckpt = tester.check_pointer.get_checkpoint_file()
-                if (
-                    saved_checkpoint is None
-                    or current_ckpt != saved_checkpoint
-                ):
-                    saved_checkpoint = current_ckpt
-                    tester.test(current_ckpt)
-            time.sleep(10)
-    else:
-        if comm.is_main_process():
-            print(
-                "Please specify --eval-only, --eval-all, or --eval-during-train"
-            )
+    ckpt_file = cfg.MODEL.WEIGHTS
+    check_pointer._load_model(check_pointer._load_file(ckpt_file))
+
+    test_loader = Trainer.build_train_loader(cfg)
+    feature_bank = {}
+    #import pdb; pdb.set_trace()
+    counter = 0
+    for batch in test_loader:
+        batch = batch
+        #model(batch)
+        #image = cv2.imread('my_image.jpg')
+        #height, width = image.shape[:2]
+        #image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
+        #inputs = [{"image": image, "height": height, "width": width}]
+        model.eval()
+        inputs = batch
+
+        gt_proposal = batch[0]['instances']
+        ##
+        gt_classes = gt_proposal.gt_classes
+
+        with torch.no_grad():
+            images = model.preprocess_image(inputs)  # don't forget to preprocess
+            features = model.backbone(images.tensor)  # set of cnn features
+            #proposals, _ = model.proposal_generator(images, features, None)  # RPN
+            
+            useful_layers = model.roi_heads.in_features
+            features_ = []
+            for layer in useful_layers:
+                features_.append(features[layer])
+            gt_proposal.gt_boxes.tensor = gt_proposal.gt_boxes.tensor.to(device)
+            # 
+            #if len(model.proposal_generator(images,features)[0][0].objectness_logits) > 0:
+            #    import pdb; pdb.set_trace()
+            #if len(model(inputs)[0]['instances'].pred_classes):
+            #    import pdb; pdb.set_trace()
+            box_features = model.roi_heads.box_pooler(features_, [gt_proposal.gt_boxes])
+            box_features = model.roi_heads.box_head(box_features)  # features of all 1k candidates
+
+            for i in range(len(gt_classes)):
+                class_idx = int(gt_classes[i].cpu().numpy())
+
+                predicted = model.roi_heads.box_predictor.cls_score(box_features[0]).argmax()
+                #print(f'{class_idx} -> {predicted}')
+                if class_idx in feature_bank:
+                    #import pdb; pdb.set_trace()
+                    feature_bank[class_idx] = torch.cat((feature_bank[class_idx], box_features[i:,:]),0)
+                else:
+                    feature_bank[class_idx] = box_features[i:,:]
+            
+        counter += 1
+        print(counter)
+        if counter > 1000:
+            break
+
+    print(f'We found {len(feature_bank.keys())} classes')
+    for key in feature_bank:
+        feature_bank[key] = torch.mean(feature_bank[key], 0, True)
+        feature_bank[key] /= feature_bank[key].norm()
+
+    
+    for j in feature_bank:
+        '''
+        class_id = j+1
+        if class_id in _base_classes:
+            print(f'skip class {class_id}')
+            continue
+
+        max_dot = -1
+        max_i = 0
+        for i in range(53):
+            dot = torch.dot()
+        '''
+        model.roi_heads.box_predictor.cls_score.weight[j] = feature_bank[j][0]
+
+    check_pointer.save('5shot')
 
 
 if __name__ == "__main__":

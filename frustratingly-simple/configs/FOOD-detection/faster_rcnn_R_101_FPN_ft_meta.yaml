@@ -6,8 +6,11 @@ MODEL:
     DEPTH: 101
   ROI_HEADS:
     NUM_CLASSES: 53
-    OUTPUT_LAYER: "FastRCNNOutputLayers"
-    FREEZE_FEAT: True
+    OUTPUT_LAYER: "CosineSimOutputLayers"
+    COSINE_SCALE: -1.
+    FREEZE_FEAT: False
+  ROI_BOX_HEAD:
+    CLS_AGNOSTIC_BBOX_REG: True
   BACKBONE:
     FREEZE: True
   PROPOSAL_GENERATOR:
@@ -16,8 +19,8 @@ INPUT:
   MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
   MIN_SIZE_TEST: 800
 DATASETS:
-  TRAIN: ('food53_base_train_5_shot','food53_novel_train_5_shot',)
-  TEST: ('food53_base_val','food53_novel_val')
+  TRAIN: ('food53_base_train',)
+  TEST: ('food53_base_val',)
 DATALOADER:
   SAMPLER_TRAIN: "RepeatFactorTrainingSampler"
   REPEAT_THRESHOLD: 0.95
@@ -26,8 +29,8 @@ SOLVER:
   BASE_LR: 0.001
   STEPS: (30000,)
   MAX_ITER: 40000
-  CHECKPOINT_PERIOD: 5000
+  CHECKPOINT_PERIOD: 10000
   WARMUP_ITERS: 0
 TEST:
   EVAL_PERIOD: 500
-OUTPUT_DIR: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_ft_5shot"
+OUTPUT_DIR: "checkpoints/food/faster_rcnn/faster_rcnn_R_101_FPN_ft_meta"
