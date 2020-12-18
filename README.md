@@ -12,3 +12,5 @@ Cosine similairty distance with novel classes:
 bash run_extract_features.sh
 ## Pose Estimation
 Pose estimation for input image with name "img_name": pose_estimation(img_name)
+
+All functions are included in the Section "All Code" of the Python notebook Pose_Estimation.ipynb
