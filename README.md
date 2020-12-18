@@ -19,15 +19,12 @@ $ bash run_extract_features.sh
 ```
 
 ## YOLO-V5
-<<<<<<< HEAD
 
-=======
->>>>>>> 1a549280ebbdaf12092bba0072bc582b9fd42074
 ```bash
 $ cd yolov5
 ```
 Requirements:
-<<<<<<< HEAD
+
 
 Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) dependencies installed, including `torch>=1.6`. To install run:
 ```bash
@@ -59,8 +56,7 @@ $ pip install -r requirements.txt
 
 Requirements:
 
-=======
->>>>>>> 1a549280ebbdaf12092bba0072bc582b9fd42074
+
 Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) dependencies installed, including `torch>=1.6`. To install run:
 ```bash
 $ pip install -r requirements.txt
